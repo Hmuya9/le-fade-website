@@ -9,8 +9,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Le Fade - Look Sharp, Always",
-  description: "Haircut subscription for modern men",
+  title: "Le Fade - Premium Haircut Subscriptions",
+  description: "Professional haircut subscriptions for busy professionals. Consistent quality, flexible scheduling, and premium service. Essential, Premium, and Elite plans available.",
+  keywords: "haircut subscription, professional haircuts, barber service, mobile barber, premium grooming",
+  openGraph: {
+    title: "Le Fade - Premium Haircut Subscriptions",
+    description: "Professional haircut subscriptions for busy professionals",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
