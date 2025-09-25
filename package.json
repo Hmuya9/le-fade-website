@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "dependencies": {
     "@clerk/nextjs": "^4.31.8",
     "@prisma/client": "^6.16.2",
@@ -21,11 +24,11 @@
     "dayjs": "^1.11.0",
     "lucide-react": "^0.544.0",
     "nanoid": "^5.1.6",
-    "next": "^15.5.4",
+    "next": "^14.2.33",
     "postcss": "^8.5.6",
     "prisma": "^6.16.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "resend": "^3.0.0",
     "stripe": "^18.5.0",
     "twilio": "^4.0.0",

@@ -17,7 +17,7 @@ export async function GET() {
     })
 
     const activeMembers = activeSubs.length
-    const mrr = activeSubs.reduce((sum, s) => sum + (s.plan?.priceMonthly ?? 0), 0)
+    const mrr = activeSubs.reduce((sum: number, s: any) => sum + (s.plan?.priceMonthly ?? 0), 0)
 
     // Appointments this week
     const apptsWeek = await prisma.appointment.findMany({
@@ -27,8 +27,8 @@ export async function GET() {
       select: { status: true, type: true, isFree: true },
     })
 
-    const completed = apptsWeek.filter(a => a.status === "COMPLETED").length
-    const noShows = apptsWeek.filter(a => a.status === "NO_SHOW").length
+    const completed = apptsWeek.filter((a: any) => a.status === "COMPLETED").length
+    const noShows = apptsWeek.filter((a: any) => a.status === "NO_SHOW").length
     const completionRate = completed + noShows > 0 ? completed / (completed + noShows) : 1
 
     // Churn (last 30d)
