@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,7 +25,11 @@ model User {
   payouts       Payout[]
 }
 
-enum Role { CLIENT BARBER OWNER }
+enum Role { 
+  CLIENT 
+  BARBER 
+  OWNER 
+}
 
 model Plan {
   id           String  @id @default(cuid())
@@ -48,7 +55,12 @@ model Subscription {
   plan        Plan     @relation(fields: [planId], references: [id])
 }
 
-enum SubStatus { TRIAL ACTIVE PAST_DUE CANCELED }
+enum SubStatus { 
+  TRIAL 
+  ACTIVE 
+  PAST_DUE 
+  CANCELED 
+}
 
 model Appointment {
   id        String   @id @default(cuid())
@@ -66,8 +78,18 @@ model Appointment {
   barber    User     @relation("BarberAppts", fields: [barberId], references: [id])
 }
 
-enum ApptType { SHOP HOME }
-enum ApptStatus { BOOKED CONFIRMED COMPLETED NO_SHOW CANCELED }
+enum ApptType { 
+  SHOP 
+  HOME 
+}
+
+enum ApptStatus { 
+  BOOKED 
+  CONFIRMED 
+  COMPLETED 
+  NO_SHOW 
+  CANCELED 
+}
 
 model Payout {
   id                String   @id @default(cuid())
@@ -83,7 +105,11 @@ model Payout {
   barber            User     @relation(fields: [barberId], references: [id])
 }
 
-enum PayoutStatus { PENDING PAID FAILED }
+enum PayoutStatus { 
+  PENDING 
+  PAID 
+  FAILED 
+}
 
 model Payment {
   id              String   @id @default(cuid())
@@ -94,7 +120,11 @@ model Payment {
   createdAt       DateTime @default(now())
 }
 
-enum PaymentKind { SUBSCRIPTION ONEOFF REFUND }
+enum PaymentKind { 
+  SUBSCRIPTION 
+  ONEOFF 
+  REFUND 
+}
 
 model PromoCode {
   id             String   @id @default(cuid())
@@ -106,7 +136,10 @@ model PromoCode {
   createdAt      DateTime @default(now())
 }
 
-enum PromoKind { PERCENT FIXED }
+enum PromoKind { 
+  PERCENT 
+  FIXED 
+}
 
 model EventLog {
   id        String   @id @default(cuid())
