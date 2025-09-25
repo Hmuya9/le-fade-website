@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
 
 export async function POST(request: NextRequest) {
+  // Check if Stripe is properly configured
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return NextResponse.json(
+      { error: "Stripe not configured" },
+      { status: 501 }
+    )
+  }
+
   try {
     const { priceId } = await request.json()
 
