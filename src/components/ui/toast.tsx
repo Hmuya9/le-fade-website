@@ -1,11 +1,14 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-export interface ToastProps {
-  title?: string
-  description?: string
-  variant?: "default" | "destructive" | "success"
-  onClose?: () => void
+type ToastVariant = "default" | "success" | "error" | "info";
+
+export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
+  title: string;
+  description?: string;
+  variant?: ToastVariant;
+  onClose?: () => void;
+  className?: string;
 }
 
 const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
@@ -14,45 +17,33 @@ const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
       <div
         ref={ref}
         className={cn(
-          "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-lg border p-6 pr-8 shadow-lg transition-all",
-          {
-            "border-primary-200 bg-white text-primary-900": variant === "default",
-            "border-danger-200 bg-danger-50 text-danger-900": variant === "destructive",
-            "border-success-200 bg-success-50 text-success-900": variant === "success",
-          },
+          "rounded-2xl p-4 shadow-sm border",
+          variant === "default" && "bg-white border-zinc-200",
+          variant === "success" && "bg-emerald-50 border-emerald-200",
+          variant === "error" && "bg-rose-50 border-rose-200",
+          variant === "info" && "bg-sky-50 border-sky-200",
           className
         )}
         {...props}
       >
-        <div className="grid gap-1">
-          {title && (
-            <div className="text-sm font-semibold">{title}</div>
-          )}
-          {description && (
-            <div className="text-sm opacity-90">{description}</div>
-          )}
-        </div>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="absolute right-2 top-2 rounded-md p-1 text-current opacity-0 transition-opacity hover:text-current focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100"
-          >
-            <span className="sr-only">Close</span>
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h4 className="text-sm font-medium">{title}</h4>
+            {description ? (
+              <p className="mt-1 text-sm text-zinc-600">{description}</p>
+            ) : null}
+          </div>
+          {onClose ? (
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={onClose}
+              className="h-8 w-8 rounded-full hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-zinc-400"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        )}
+              ×
+            </button>
+          ) : null}
+        </div>
       </div>
     )
   }
