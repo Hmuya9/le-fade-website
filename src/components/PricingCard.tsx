@@ -6,7 +6,7 @@ export function PricingCard({
 }: {
   title: string;
   price: string;
-  bullets: string[];
+  bullets: readonly string[];
   onClick: () => void;
   accent?: boolean;
 }) {
