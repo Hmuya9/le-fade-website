@@ -36,3 +36,4 @@ export function PlanCard({ title, price, bullets, cta, accent }: PlanCardProps) 
     </div>
   );
 }
+

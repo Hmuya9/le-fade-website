@@ -123,10 +123,11 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error("Error fetching admin metrics:", error)
+    // TODO: Add proper error logging service
     return NextResponse.json(
       { error: "Failed to fetch metrics" },
       { status: 500 }
     )
   }
 }
+

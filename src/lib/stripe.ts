@@ -17,3 +17,4 @@ export const formatAmountForDisplay = (amount: number, currency: string): string
 export const formatAmountForStripe = (amount: number): number => {
   return Math.round(amount * 100)
 }
+

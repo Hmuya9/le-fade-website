@@ -2,32 +2,64 @@
 
 import { useEffect, useState } from "react"
 import { AdminMetrics } from "@/types"
+import { MetricCard } from "@/components/MetricCard"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { SkeletonList } from "@/components/ui/SkeletonList"
+import { ErrorState } from "@/components/ui/ErrorState"
 
 export default function AdminDashboard() {
   const [data, setData] = useState<AdminMetrics | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await fetch("/api/admin/metrics")
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics")
+      }
+      const result = await response.json()
+      setData(result.kpis)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    fetch("/api/admin/metrics")
-      .then(res => res.json())
-      .then(data => {
-        setData(data.kpis)
-        setLoading(false)
-      })
+    fetchData()
   }, [])
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading admin dashboard...</div>
+      <div className="min-h-screen bg-primary-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-primary-900 mb-2">Admin Dashboard</h1>
+            <p className="text-primary-600">Loading business metrics...</p>
+          </div>
+          <SkeletonList count={6} />
+        </div>
       </div>
     )
   }
 
-  if (!data) {
+  if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-red-600">Failed to load data</div>
+      <div className="min-h-screen bg-primary-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-primary-900 mb-2">Admin Dashboard</h1>
+          </div>
+          <ErrorState 
+            title="Failed to load dashboard"
+            description={error || "Unable to fetch metrics data"}
+            onRetry={fetchData}
+          />
+        </div>
       </div>
     )
   }
@@ -39,9 +71,12 @@ export default function AdminDashboard() {
     `${(value * 100).toFixed(1)}%`
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-primary-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-primary-900 mb-2">Admin Dashboard</h1>
+          <p className="text-primary-600">Business metrics and analytics</p>
+        </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -79,108 +114,88 @@ export default function AdminDashboard() {
         </div>
 
         {/* Profit Panel */}
-        <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-6">Profit Analysis (Last 30 Days)</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Revenue</div>
-              <div className="text-2xl font-bold text-green-600">
-                {formatCurrency(data.revenue30)}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold text-primary-900">Profit Analysis (Last 30 Days)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Revenue</div>
+                <div className="text-2xl font-bold text-success-600">
+                  {formatCurrency(data.revenue30)}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Base Cost</div>
+                <div className="text-2xl font-bold text-danger-600">
+                  {formatCurrency(data.breakdown.baseCost)}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Standard Cost</div>
+                <div className="text-2xl font-bold text-danger-600">
+                  {formatCurrency(data.breakdown.standardCost)}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Deluxe Cost</div>
+                <div className="text-2xl font-bold text-danger-600">
+                  {formatCurrency(data.breakdown.deluxeCost)}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Bonus/Free</div>
+                <div className="text-2xl font-bold text-danger-600">
+                  {formatCurrency(data.breakdown.bonusCost)}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-primary-600 mb-1">Operations</div>
+                <div className="text-2xl font-bold text-danger-600">
+                  {formatCurrency(data.breakdown.opsCost)}
+                </div>
               </div>
             </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Base Cost</div>
-              <div className="text-2xl font-bold text-red-600">
-                {formatCurrency(data.breakdown.baseCost)}
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Standard Cost</div>
-              <div className="text-2xl font-bold text-red-600">
-                {formatCurrency(data.breakdown.standardCost)}
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Deluxe Cost</div>
-              <div className="text-2xl font-bold text-red-600">
-                {formatCurrency(data.breakdown.deluxeCost)}
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Bonus/Free</div>
-              <div className="text-2xl font-bold text-red-600">
-                {formatCurrency(data.breakdown.bonusCost)}
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-1">Operations</div>
-              <div className="text-2xl font-bold text-red-600">
-                {formatCurrency(data.breakdown.opsCost)}
-              </div>
-            </div>
-          </div>
 
-          <div className="text-center">
-            <div className="text-sm text-gray-500 mb-2">Net Profit</div>
-            <div className={`text-4xl font-bold ${
-              data.profit >= 0 ? "text-green-600" : "text-red-600"
-            }`}>
-              {formatCurrency(data.profit)}
+            <div className="text-center">
+              <div className="text-sm text-primary-600 mb-2">Net Profit</div>
+              <div className={`text-4xl font-bold ${
+                data.profit >= 0 ? "text-success-600" : "text-danger-600"
+              }`}>
+                {formatCurrency(data.profit)}
+              </div>
+              <div className="text-sm text-primary-600 mt-2">
+                Margin: {formatPercentage(data.revenue30 > 0 ? data.profit / data.revenue30 : 0)}
+              </div>
             </div>
-            <div className="text-sm text-gray-500 mt-2">
-              Margin: {formatPercentage(data.revenue30 > 0 ? data.profit / data.revenue30 : 0)}
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="p-4 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-              <div className="text-lg font-semibold mb-2">Manage Barbers</div>
-              <div className="text-sm text-gray-600">Add, edit, or remove barbers</div>
-            </button>
-            <button className="p-4 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-              <div className="text-lg font-semibold mb-2">View Appointments</div>
-              <div className="text-sm text-gray-600">See all upcoming bookings</div>
-            </button>
-            <button className="p-4 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-              <div className="text-lg font-semibold mb-2">Send Notifications</div>
-              <div className="text-sm text-gray-600">Message all members</div>
-            </button>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold text-primary-900">Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button className="p-4 border-2 border-primary-200 rounded-xl hover:border-primary-300 transition-colors text-left">
+                <div className="text-lg font-semibold mb-2 text-primary-900">Manage Barbers</div>
+                <div className="text-sm text-primary-600">Add, edit, or remove barbers</div>
+              </button>
+              <button className="p-4 border-2 border-primary-200 rounded-xl hover:border-primary-300 transition-colors text-left">
+                <div className="text-lg font-semibold mb-2 text-primary-900">View Appointments</div>
+                <div className="text-sm text-primary-600">See all upcoming bookings</div>
+              </button>
+              <button className="p-4 border-2 border-primary-200 rounded-xl hover:border-primary-300 transition-colors text-left">
+                <div className="text-lg font-semibold mb-2 text-primary-900">Send Notifications</div>
+                <div className="text-sm text-primary-600">Message all members</div>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
 
-function MetricCard({ 
-  title, 
-  value, 
-  icon, 
-  alert = false 
-}: { 
-  title: string 
-  value: string | number 
-  icon: string 
-  alert?: boolean
-}) {
-  return (
-    <div className={`bg-white rounded-2xl p-6 shadow-lg ${
-      alert ? "border-2 border-red-200" : ""
-    }`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-sm text-gray-500">{title}</div>
-        <div className="text-2xl">{icon}</div>
-      </div>
-      <div className={`text-3xl font-bold ${
-        alert ? "text-red-600" : "text-gray-900"
-      }`}>
-        {value}
-      </div>
-    </div>
-  )
-}
