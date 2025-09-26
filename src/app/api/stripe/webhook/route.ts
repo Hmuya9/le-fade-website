@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
   } catch (error) {
-    console.error("Webhook signature verification failed:", error)
+    // TODO: Add proper error logging service
     return NextResponse.json(
       { error: "Invalid signature" },
       { status: 400 }
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error("Error processing webhook:", error)
+    // TODO: Add proper error logging service
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }
@@ -103,3 +103,4 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   console.log("Subscription deleted:", subscription.id)
   // TODO: Mark subscription as canceled
 }
+

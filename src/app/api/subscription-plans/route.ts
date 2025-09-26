@@ -19,10 +19,11 @@ export async function GET() {
 
     return NextResponse.json(subscriptionPlans)
   } catch (error) {
-    console.error("Error fetching plans:", error)
+    // TODO: Add proper error logging service
     return NextResponse.json(
       { error: "Failed to fetch plans" },
       { status: 500 }
     )
   }
 }
+

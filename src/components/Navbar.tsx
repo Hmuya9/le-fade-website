@@ -2,79 +2,107 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { env } from "@/lib/env";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-6">
+    <nav className="bg-white border-b border-primary-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-slate-900">
+          <Link href="/" className="text-2xl font-bold text-primary-900">
             Le Fade
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
-              href="#plans" 
-              className="text-slate-700 hover:text-slate-900 font-medium transition-colors"
+              href="/plans" 
+              className="text-primary-700 hover:text-primary-900 font-medium transition-colors"
             >
               Plans
             </Link>
-            <a 
-              href="https://wa.me/1234567890?text=Hi%20I%27d%20like%20to%20learn%20more%20about%20Le%20Fade" 
-              className="text-slate-700 hover:text-slate-900 font-medium transition-colors"
+            <Link 
+              href="/booking" 
+              className="text-primary-700 hover:text-primary-900 font-medium transition-colors"
             >
-              Contact
-            </a>
-            <a 
-              href="https://wa.me/1234567890?text=Hi%2C%20I%27m%20ready%20to%20start%20my%20Le%20Fade%20subscription" 
-              className="bg-amber-500 text-black px-6 py-2 rounded-lg font-semibold hover:bg-amber-400 transition-colors"
+              Book Now
+            </Link>
+            <Link 
+              href="/barber" 
+              className="text-primary-700 hover:text-primary-900 font-medium transition-colors"
             >
-              Get Started
-            </a>
+              Barber Login
+            </Link>
+            <Link 
+              href="/admin" 
+              className="text-primary-700 hover:text-primary-900 font-medium transition-colors"
+            >
+              Admin
+            </Link>
+            <Button asChild>
+              <Link href="/plans">Get Started</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button 
             className="md:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             <div className="space-y-1">
-              <div className={`w-6 h-0.5 bg-slate-900 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
-              <div className={`w-6 h-0.5 bg-slate-900 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-              <div className={`w-6 h-0.5 bg-slate-900 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-primary-900 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-primary-900 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-primary-900 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
             </div>
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white">
+          <div id="mobile-menu" className="md:hidden border-t border-primary-200 bg-white">
             <div className="py-4 space-y-4">
               <Link 
-                href="#plans" 
-                className="block text-slate-700 hover:text-slate-900 font-medium transition-colors px-2 py-1"
+                href="/plans" 
+                className="block text-primary-700 hover:text-primary-900 font-medium transition-colors px-2 py-1"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Plans
               </Link>
-              <a 
-                href="https://wa.me/1234567890?text=Hi%20I%27d%20like%20to%20learn%20more%20about%20Le%20Fade" 
-                className="block text-slate-700 hover:text-slate-900 font-medium transition-colors px-2 py-1"
+              <Link 
+                href="/booking" 
+                className="block text-primary-700 hover:text-primary-900 font-medium transition-colors px-2 py-1"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Contact
-              </a>
-              <a 
-                href="https://wa.me/1234567890?text=Hi%2C%20I%27m%20ready%20to%20start%20my%20Le%20Fade%20subscription" 
-                className="block bg-amber-500 text-black px-6 py-3 rounded-lg font-semibold hover:bg-amber-400 transition-colors text-center mx-2"
+                Book Now
+              </Link>
+              <Link 
+                href="/barber" 
+                className="block text-primary-700 hover:text-primary-900 font-medium transition-colors px-2 py-1"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Get Started
-              </a>
+                Barber Login
+              </Link>
+              <Link 
+                href="/admin" 
+                className="block text-primary-700 hover:text-primary-900 font-medium transition-colors px-2 py-1"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
+              </Link>
+              <div className="px-2">
+                <Button asChild className="w-full">
+                  <Link href="/plans" onClick={() => setIsMenuOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}

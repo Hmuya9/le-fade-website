@@ -1,7 +1,25 @@
 import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
+import { createErrorResponse } from "@/lib/error"
+import { rateLimit, getClientIP } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const clientIP = getClientIP(request)
+  const rateLimitResult = rateLimit(`checkout:${clientIP}`, 5, 60 * 1000) // 5 requests per minute
+  
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { 
+        status: 429,
+        headers: {
+          "Retry-After": Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString()
+        }
+      }
+    )
+  }
+
   // Check if Stripe is properly configured
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
@@ -36,10 +54,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url })
   } catch (error) {
-    console.error("Error creating checkout session:", error)
-    return NextResponse.json(
-      { error: "Failed to create checkout session" },
-      { status: 500 }
-    )
+    return createErrorResponse(error)
   }
 }
+
