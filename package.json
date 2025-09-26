@@ -6,13 +6,11 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": "20.17.x"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.31.8",

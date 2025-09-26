@@ -1,15 +1,17 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export function PricingCard({
-  title, price, bullets, onClick, accent = false
-}: {
+interface PricingCardProps {
   title: string;
   price: string;
-  bullets: readonly string[];
-  onClick: () => void;
+  bullets: ReadonlyArray<string>;
+  onClick?: () => void;
   accent?: boolean;
-}) {
+}
+
+export function PricingCard({
+  title, price, bullets, onClick, accent = false
+}: PricingCardProps) {
   return (
     <Card className={`rounded-2xl p-8 ${accent ? "bg-primary-900 text-white" : "bg-white border border-primary-200"}`}>
       <h3 className="text-2xl font-semibold tracking-tight">{title}</h3>
