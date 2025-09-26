@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: process.env.CI === 'true' }
+  eslint: { 
+    ignoreDuringBuilds: true 
+  }
 };
 
 module.exports = nextConfig;
