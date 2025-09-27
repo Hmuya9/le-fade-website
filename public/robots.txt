@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://le-fade-eny7.vercel.app/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /barber/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow public pages
+Allow: /
+Allow: /plans
+Allow: /booking

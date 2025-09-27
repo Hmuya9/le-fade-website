@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
+import { env } from "@/lib/env"
 
 export async function GET() {
   try {
-    const prices = await stripe.prices.list({
+    if (!env.enableStripe) {
+      return NextResponse.json({
+        plans: [],
+        message: "Payment processing is currently unavailable"
+      })
+    }
+
+    const prices = await stripe!.prices.list({
       active: true,
       expand: ["data.product"],
     })

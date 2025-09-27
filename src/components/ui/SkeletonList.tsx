@@ -1,15 +1,18 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function SkeletonList({ count = 3 }: { count?: number }) {
+interface SkeletonListProps {
+  count?: number;
+  className?: string;
+}
+
+export function SkeletonList({ count = 3, className = "" }: SkeletonListProps) {
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4 ${className}`}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
+        <div key={i} className="space-y-2">
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-2/3" />
         </div>
       ))}
     </div>

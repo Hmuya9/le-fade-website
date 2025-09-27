@@ -18,11 +18,15 @@ model User {
   name      String?
   clerkId   String?  @unique
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   
   subscriptions Subscription[]
   clientAppts   Appointment[] @relation("ClientAppts")
   barberAppts   Appointment[] @relation("BarberAppts")
   payouts       Payout[]
+  reviews       Review[]
+  payments      Payment[]
+  availability  Availability[]
 }
 
 enum Role { 
@@ -73,9 +77,18 @@ model Appointment {
   address   String?
   notes     String?
   isFree    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   
   client    User     @relation("ClientAppts", fields: [clientId], references: [id])
   barber    User     @relation("BarberAppts", fields: [barberId], references: [id])
+  payment   Payment?
+  review    Review?
+  
+  // Prevent double booking
+  @@unique([barberId, startAt])
+  @@index([clientId, startAt])
+  @@index([barberId, startAt, status])
 }
 
 enum ApptType { 
@@ -114,16 +127,29 @@ enum PayoutStatus {
 model Payment {
   id              String   @id @default(cuid())
   userId          String
+  appointmentId   String?  @unique
   stripePaymentId String   @unique
   amount          Int      // Amount in cents
   kind            PaymentKind
+  status          PaymentStatus @default(PENDING)
   createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user        User         @relation(fields: [userId], references: [id])
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
 }
 
 enum PaymentKind { 
   SUBSCRIPTION 
   ONEOFF 
   REFUND 
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }
 
 model PromoCode {
@@ -141,10 +167,47 @@ enum PromoKind {
   FIXED 
 }
 
+model Review {
+  id            String   @id @default(cuid())
+  userId        String
+  appointmentId String   @unique
+  rating        Int      // 1-5 stars
+  comment       String?
+  isModerated   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  user        User        @relation(fields: [userId], references: [id])
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+  
+  @@index([rating])
+  @@index([isModerated])
+}
+
+model Availability {
+  id        String   @id @default(cuid())
+  barberId  String
+  dayOfWeek Int      // 0-6 (Sunday-Saturday)
+  startTime String   // "09:00"
+  endTime   String   // "17:00"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  barber User @relation(fields: [barberId], references: [id])
+  
+  @@unique([barberId, dayOfWeek])
+  @@index([barberId, isActive])
+}
+
 model EventLog {
   id        String   @id @default(cuid())
   type      String
   payload   Json
   createdAt DateTime @default(now())
+  
+  @@index([type])
+  @@index([createdAt])
 }
+
 

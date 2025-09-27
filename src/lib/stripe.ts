@@ -1,9 +1,36 @@
 import Stripe from 'stripe'
+import { env } from './env'
+import { logger } from './logger'
 
-// For deployment, use placeholder if no API key is provided
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-  apiVersion: '2025-08-27.basil',
-})
+// Create Stripe instance with proper error handling
+export const stripe = env.enableStripe 
+  ? new Stripe(env.stripeSecretKey, {
+      apiVersion: '2025-08-27.basil',
+    })
+  : null
+
+// Helper to check if Stripe is available
+export const isStripeEnabled = () => {
+  return env.enableStripe && stripe !== null
+}
+
+// Safe Stripe operations with fallbacks
+export const safeStripeOperation = async <T>(
+  operation: (stripe: Stripe) => Promise<T>,
+  fallback?: T
+): Promise<T | null> => {
+  if (!isStripeEnabled()) {
+    logger.warn('Stripe operation attempted but Stripe is not enabled')
+    return fallback || null
+  }
+
+  try {
+    return await operation(stripe!)
+  } catch (error) {
+    logger.error('Stripe operation failed', error as Error)
+    return fallback || null
+  }
+}
 
 export const formatAmountForDisplay = (amount: number, currency: string): string => {
   let numberFormat = new Intl.NumberFormat(['en-US'], {
@@ -17,4 +44,5 @@ export const formatAmountForDisplay = (amount: number, currency: string): string
 export const formatAmountForStripe = (amount: number): number => {
   return Math.round(amount * 100)
 }
+
 

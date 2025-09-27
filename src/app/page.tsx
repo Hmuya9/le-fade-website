@@ -8,34 +8,69 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative px-6 py-32 text-center bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-500/10 via-transparent to-accent-500/5"></div>
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-6xl font-bold text-white mb-6 tracking-tight">
-            Le Fade
-          </h1>
-          <p className="text-2xl text-primary-300 mb-4 font-light">
-            Premium Haircut Subscriptions
-          </p>
-          <p className="text-lg text-primary-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Consistent, professional cuts delivered on your schedule. 
-            Never worry about booking again.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900">
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+          <div className="mb-8">
+            <h1 className="text-7xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-tight">
+              Book Your
+              <span className="block text-accent-500">Best Cut</span>
+            </h1>
+            <p className="text-2xl md:text-3xl text-primary-300 mb-6 font-light max-w-3xl mx-auto">
+              Premium haircut subscriptions for busy professionals
+            </p>
+            <p className="text-lg text-primary-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Consistent, professional cuts delivered on your schedule. 
+              Never worry about booking again.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
             <Link 
               href="/plans" 
-              className="inline-flex items-center px-8 py-4 bg-accent-500 text-primary-900 font-semibold rounded-xl hover:bg-accent-400 transition-all duration-200 text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
+              className="inline-flex items-center px-10 py-5 bg-accent-500 text-primary-900 font-bold rounded-2xl hover:bg-accent-400 transition-all duration-300 text-xl shadow-2xl hover:shadow-accent-500/25 transform hover:-translate-y-1 hover:scale-105"
             >
-              <span className="mr-2">📱</span>
+              <span className="mr-3 text-2xl">✂️</span>
               Start Your Subscription
             </Link>
             <a 
               href={env.calendly || "/booking"}
-              className="inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary-300 font-semibold rounded-xl hover:border-primary-500 hover:text-white transition-all duration-200"
+              className="inline-flex items-center px-10 py-5 border-2 border-white/30 text-white font-semibold rounded-2xl hover:border-white hover:bg-white/10 transition-all duration-300 text-xl backdrop-blur-sm"
               target={env.calendly ? "_blank" : undefined}
             >
+              <span className="mr-3">📅</span>
               Book Free Test Cut
             </a>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-primary-300 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-accent-500">✓</span>
+              <span>Professional Barbers</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-accent-500">✓</span>
+              <span>Flexible Scheduling</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-accent-500">✓</span>
+              <span>Home or Shop Service</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
@@ -178,6 +213,90 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <section className="px-6 py-24 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-primary-900 mb-4">
+              Our Work
+            </h3>
+            <p className="text-xl text-primary-600 max-w-2xl mx-auto">
+              Professional cuts that speak for themselves
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="text-primary-400 text-4xl group-hover:text-primary-600 transition-colors">
+                  ✂️
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="px-6 py-24 bg-primary-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-primary-900 mb-4">
+              What Our Clients Say
+            </h3>
+            <p className="text-xl text-primary-600 max-w-2xl mx-auto">
+              Join hundreds of satisfied professionals
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Michael Chen",
+                role: "Software Engineer",
+                rating: 5,
+                text: "Le Fade has completely transformed my grooming routine. The convenience of having a professional come to my home is unmatched.",
+                avatar: "👨‍💻"
+              },
+              {
+                name: "Sarah Johnson",
+                role: "Marketing Director",
+                rating: 5,
+                text: "Consistent quality every time. I never have to worry about getting a bad haircut or finding time to book appointments.",
+                avatar: "👩‍💼"
+              },
+              {
+                name: "David Rodriguez",
+                role: "Financial Advisor",
+                rating: 5,
+                text: "The subscription model is perfect for my busy schedule. Professional service at a predictable price.",
+                avatar: "👨‍💼"
+              }
+            ].map((testimonial, idx) => (
+              <Card key={idx} className="p-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-0">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center text-2xl mr-4">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-primary-900">{testimonial.name}</h4>
+                      <p className="text-sm text-primary-600">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <span key={i} className="text-accent-500 text-lg">★</span>
+                    ))}
+                  </div>
+                  <p className="text-primary-700 leading-relaxed">"{testimonial.text}"</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="px-6 py-24 bg-gradient-to-br from-accent-500 to-accent-600">
         <div className="max-w-4xl mx-auto text-center">
@@ -190,17 +309,18 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link 
               href="/plans" 
-              className="inline-flex items-center px-8 py-4 bg-primary-900 text-white font-semibold rounded-xl hover:bg-primary-800 transition-all duration-200 text-lg shadow-xl"
+              className="inline-flex items-center px-10 py-5 bg-primary-900 text-white font-bold rounded-2xl hover:bg-primary-800 transition-all duration-300 text-xl shadow-2xl hover:shadow-primary-900/25 transform hover:-translate-y-1"
             >
-              <span className="mr-2">📱</span>
+              <span className="mr-3 text-2xl">✂️</span>
               Start Your Subscription
             </Link>
             <a 
               href={env.calendly || "/booking"}
-              className="inline-flex items-center px-8 py-4 border-2 border-primary-900 text-primary-900 font-semibold rounded-xl hover:bg-primary-900 hover:text-white transition-all duration-200"
+              className="inline-flex items-center px-10 py-5 border-2 border-primary-900 text-primary-900 font-semibold rounded-2xl hover:bg-primary-900 hover:text-white transition-all duration-300 text-xl"
               target={env.calendly ? "_blank" : undefined}
             >
-              Ask Questions
+              <span className="mr-3">📅</span>
+              Book Free Test Cut
             </a>
           </div>
         </div>

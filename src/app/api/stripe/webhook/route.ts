@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
+import { env } from "@/lib/env"
 import { prisma } from "@/lib/db"
 import Stripe from "stripe"
 
@@ -25,10 +26,17 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(
+    if (!env.enableStripe) {
+      return NextResponse.json(
+        { error: "Stripe not configured" },
+        { status: 503 }
+      )
+    }
+
+    event = stripe!.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      env.stripeWebhookSecret
     )
   } catch (error) {
     // TODO: Add proper error logging service

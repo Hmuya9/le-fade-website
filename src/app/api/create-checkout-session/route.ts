@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe"
+import { env } from "@/lib/env"
 import { createErrorResponse } from "@/lib/error"
 import { rateLimit, getClientIP } from "@/lib/rate-limit"
 
@@ -38,7 +39,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const session = await stripe.checkout.sessions.create({
+    if (!env.enableStripe) {
+      return NextResponse.json(
+        { error: "Payment processing is currently unavailable" },
+        { status: 503 }
+      )
+    }
+
+    const session = await stripe!.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { stripe } from "@/lib/stripe"
+import { env } from "@/lib/env"
 import dayjs from "dayjs"
 
 export async function GET() {
@@ -57,10 +58,12 @@ export async function GET() {
     })
 
     // Revenue (last 30d) - simplified for MVP
-    const invoices = await stripe.invoices.list({ 
-      limit: 100, 
-      status: "paid" 
-    })
+    const invoices = env.enableStripe 
+      ? await stripe!.invoices.list({ 
+          limit: 100, 
+          status: "paid" 
+        })
+      : { data: [] }
 
     const revenue30 = invoices.data
       .filter(inv => dayjs(inv.status_transitions?.paid_at! * 1000).isAfter(start30))
